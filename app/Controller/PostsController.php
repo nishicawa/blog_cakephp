@@ -40,5 +40,30 @@ class PostsController extends AppController{
 
     }
 
+    public function delete( $id ) {
+        $this->log('call ajax0', MYLOG);
+        if ($this->request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
+        if ($this->request->is('ajax')){
+            $this->log('call ajax1', MYLOG);
+            if( $this->Post->delete($id)) {
+                $this->log('call ajax2', MYLOG);
+                $this->autoReder = false;
+                $this->autoLayout = false;
+                $response = array('id' => $id);
+                $this->header('Content-Type: application/json');
+                echo json_encode($response);
+                exit();
+            }
+        }
+        $this->redirect(array('action'=>'index'));
+
+        // ↓not ajax
+        // if ($this->Post->delete($id)) {
+        //     $this->Session->setFlash('Deleted');
+        //     $this->redirect(array('action'=>'index'));
+        // }
+    }
 
 }
